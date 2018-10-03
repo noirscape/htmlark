@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 """Embed images, CSS, and JavaScript into an HTML file, using data URIs."""
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 import argparse
 import base64
 from datetime import datetime
-import mimetypes
 import sys
 from typing import Callable
 from urllib.parse import quote
 from urllib.parse import urljoin
 from urllib.parse import urlparse
+
+try:
+    import magic
+except ImportError:
+    python_magic = None
+    import mimetypes
 
 import bs4
 # Import requests if available, dummy it if not
@@ -58,8 +63,8 @@ def _get_resource(resource_url: str) -> (str, bytes):
         if requests_get is not None:
             request = requests_get(resource_url)
             data = request.content
-            if 'Content-Type' in request.headers:
-                mimetype = request.headers['Content-Type']
+            if python_magic:
+                mimetype = magic.from_buffer(request.content, mime=True)
             else:
                 mimetype = mimetypes.guess_type(resource_url)
         else:
@@ -68,7 +73,10 @@ def _get_resource(resource_url: str) -> (str, bytes):
         # '' is local file
         with open(resource_url, 'rb') as f:
             data = f.read()
-        mimetype, _ = mimetypes.guess_type(resource_url)
+        if python_magic:
+            mimetype = magic.from_file(resource_url, mime=True)
+        else:
+            mimetype, _ = mimetypes.guess_type(resource_url)
     elif url_parsed.scheme == 'data':
         raise ValueError("Resource path is a data URI", url_parsed.scheme)
     else:
@@ -340,7 +348,6 @@ def _main():
     except (OSError, RequestException, ValueError) as e:
         sys.exit("Unable to convert webpage: {}".format(e))
     except NameError:
-        raise
         sys.exit("Cannot download web resource: Need Requests installed")
 
     # Write output

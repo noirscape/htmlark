@@ -42,6 +42,7 @@ setup(
     extras_require={
         'parsers': ['lxml', 'html5lib'],
         'http': ['requests'],
+        'mime': ['python-magic'],
     },
     entry_points={
         'console_scripts': [
