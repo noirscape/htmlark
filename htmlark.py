@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Embed images, CSS, and JavaScript into an HTML file, using data URIs."""
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 import argparse
 import base64
@@ -14,8 +14,10 @@ from urllib.parse import urlparse
 try:
     import magic
 except ImportError:
-    python_magic = None
+    python_magic = False
     import mimetypes
+else:
+    python_magic = True
 
 import bs4
 # Import requests if available, dummy it if not
