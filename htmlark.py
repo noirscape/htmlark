@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Embed images, CSS, and JavaScript into an HTML file, using data URIs."""
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 
 import argparse
 import base64
@@ -225,9 +225,9 @@ def convert_page(page_path: str, parser: str='auto',
 
     # Convert the linked resources
     for tag in tags:
+        # BUG: Does not parse xlinks
         tag_url = tag['href'] if tag.name == 'link' else tag['src']
         try:
-            # BUG: doesn't work if using relative remote URLs in a local file
             try:
                 fullpath = urljoin(_make_base_url(page_path), tag_url)
             except ValueError as e:

@@ -1,12 +1,8 @@
 HTMLArk
 =======
 
-.. image:: https://img.shields.io/github/downloads/BitLooter/htmlark/total.svg
-        :target: https://github.com/BitLooter/htmlark
-.. image:: https://img.shields.io/pypi/v/HTMLArk.svg
-        :target: https://pypi.python.org/pypi/HTMLArk
-.. image:: https://img.shields.io/pypi/l/HTMLArk.svg
-        :target: https://raw.githubusercontent.com/BitLooter/htmlark/master/LICENSE.txt
+.. image:: https://img.shields.io/github/downloads/noirscape/htmlark/total.svg
+        :target: https://github.com/noirscape/htmlark
 
 Embed images, CSS, and JavaScript into an HTML file. Through the magic of `data URIs <https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs>`_, HTMLArk can save these external dependencies inline right in the HTML. No more keeping around those "reallycoolwebpage_files" directories alongside the HTML files, everything is self-contained.
 
@@ -22,13 +18,13 @@ Install HTMLArk with ``pip`` like so:
 
 .. code-block:: bash
 
-    pip install htmlark
+    pip install git+https://github.com/noirscape/htmlark.git#egg=htmlark
 
-To use the `lxml <http://lxml.de/>`_ (recommended) or `html5lib <https://github.com/html5lib/html5lib-python>`_ parsers, you will need to install the lxml and/or html5lib Python libraries as well. HTMLArk can also get resources from the web, to enable this functionality you need `Requests <http://python-requests.org/>`_ installed. You can install HTMLArk with all optional dependencies with this command:
+To use the `lxml <http://lxml.de/>`_ (recommended) or `html5lib <https://github.com/html5lib/html5lib-python>`_ parsers, you will need to install the lxml and/or html5lib Python libraries as well. HTMLArk can also get resources from the web, to enable this functionality you need `Requests <http://python-requests.org/>`_ installed. For better mime-type parsing (for encoding to base64) you can install `python-magic <https://pypi.org/project/python-magic/>`_ You can install HTMLArk with all optional dependencies with this command:
 
 .. code-block:: bash
 
-    pip install htmlark[http,parsers]
+    pip install git+https://github.com/noirscape/htmlark.git#egg=htmlark[http,parsers,mime]
 
 
 If you want to install it manually, the only hard dependency HTMLArk has is `Beautiful Soup 4 <http://www.crummy.com/software/BeautifulSoup/>`_.
