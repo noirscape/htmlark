@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Embed images, CSS, and JavaScript into an HTML file, using data URIs."""
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 import argparse
 import base64
@@ -107,6 +107,22 @@ def make_data_uri(mimetype: str, data: bytes) -> str:
         encoded_data = base64.b64encode(data).decode()
     return "data:{},{}".format(mimetype, encoded_data)
 
+def _make_base_url(url: str) -> str:
+    """Make a base URL for remote URLs.
+
+    Parameters:
+        url (str): URL to get a base URL from.
+
+    Returns:
+        str: base URL.
+
+    Raises:
+        ValueError: If specified URL is not a remote URL
+    """
+    url_parsed = urlparse(url)
+    if url_parsed.scheme not in ['http', 'https']:
+        raise ValueError('Specified url is note a remote URL')
+    return url_parsed.scheme + '://' + url_parsed.netloc + '/'
 
 def convert_page(page_path: str, parser: str='auto',
                  callback: Callable[[str, str, str], None]=lambda *_: None,
@@ -212,8 +228,12 @@ def convert_page(page_path: str, parser: str='auto',
         tag_url = tag['href'] if tag.name == 'link' else tag['src']
         try:
             # BUG: doesn't work if using relative remote URLs in a local file
-            fullpath = urljoin(page_path, tag_url)
-            tag_mime, tag_data = _get_resource(fullpath)
+            try:
+                fullpath = urljoin(_make_base_url(page_path), tag_url)
+            except ValueError as e:
+                fullpath = urljoin(page_path, tag_url)
+            finally:
+                tag_mime, tag_data = _get_resource(fullpath)
         except RequestException:
             callback('ERROR', tag.name, "Can't access URL " + fullpath)
             if not ignore_errors:
