@@ -150,7 +150,7 @@ def convert_page(page_path: str, parser: str='auto',
             three parameters: message type ('INFO' or 'ERROR'), a string with
             the category of the callback (usually the tag related to the
             message), and the message data (usually a string to be printed).
-        disable_js (bool): If ```True``` removes all javascript. Overrides ignore_js.
+        disable_js (bool): If ```True``` removes all local javascript. Overrides ignore_js.
             Default: ```False```
     Returns:
         str: The new webpage HTML.
@@ -226,7 +226,7 @@ def convert_page(page_path: str, parser: str='auto',
                 tags.append(script)
     if disable_js:
         for element in soup.findAll('script', src=False):
-                element.extract()
+            element.decompose()
 
     # Convert the linked resources
     for tag in tags:
