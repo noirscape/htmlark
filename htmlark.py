@@ -225,7 +225,7 @@ def convert_page(page_path: str, parser: str='auto',
             if 'src' in script.attrs:
                 tags.append(script)
     if disable_js:
-        for element in soup.findAll('script'):
+        for element in soup.findAll('script', src=False):
                 element.extract()
 
     # Convert the linked resources
